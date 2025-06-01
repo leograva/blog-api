@@ -56,6 +56,9 @@ jobs:
       env:
         PGPASSWORD: postgres # Senha do usuário do banco
 
+    - name: Corrige permissões do Jest
+      run: chmod +x ./node_modules/.bin/jest
+
     - name: Execução de testes automatizados
       run: npm test # Executa os testes automatizados
 
