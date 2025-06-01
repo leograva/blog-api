@@ -79,3 +79,15 @@ const searchPosts = async (query) => {
   );
   return result.rows;
 };
+
+/**
+ * Exporta todas as funções do modelo de posts para serem utilizadas em outros módulos.
+ */
+module.exports = {
+  getAllPosts,
+  getPostById,
+  createPost,
+  updatePost,
+  deletePost,
+  searchPosts
+};

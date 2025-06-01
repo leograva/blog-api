@@ -9,7 +9,7 @@ exports.getPosts = async (req, res) => {
     res.json(posts); // Retorna as postagens em formato JSON
   } catch (err) {
     // Em caso de erro, retorna status 500 e mensagem de erro
-    res.status(500).json({ error: 'Erro ao listar postagens' });
+    res.status(500).json({ error: `Erro ao listar postagens ${err.message}` });
   }
 };
 

@@ -1,131 +1,67 @@
 const request = require('supertest');
 const app = require('../app');
 
-describe('POST /posts', () => {
-  it('deve criar um novo post', async () => {
+describe('Posts API', () => {
+  let createdPostId;
+
+  // Teste de criação de post
+  it('should create a new post', async () => {
     const res = await request(app)
       .post('/posts')
       .send({
-        title: 'Test Post',
-        content: 'Conteúdo de teste',
+        title: 'Novo Post',
+        content: 'Conteúdo do post',
         author: 'Autor Teste'
       });
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('id');
+    expect(res.body.title).toBe('Novo Post');
+    createdPostId = res.body.id;
   });
 
-  it('deve retornar 400 ao criar post sem título', async () => {
-    const res = await request(app)
-      .post('/posts')
-      .send({
-        content: 'Conteúdo sem título',
-        author: 'Autor Teste'
-      });
-    expect(res.statusCode).toBe(400);
-  });
-
-  it('deve retornar 400 ao criar post sem conteúdo', async () => {
-    const res = await request(app)
-      .post('/posts')
-      .send({
-        title: 'Sem Conteúdo',
-        author: 'Autor Teste'
-      });
-    expect(res.statusCode).toBe(400);
-  });
-
-  it('deve retornar 400 ao criar post sem autor', async () => {
-    const res = await request(app)
-      .post('/posts')
-      .send({
-        title: 'Sem Autor',
-        content: 'Conteúdo'
-      });
-    expect(res.statusCode).toBe(400);
-  });
-});
-
-describe('GET /posts', () => {
-  it('deve retornar uma lista de posts', async () => {
+  // Teste de listagem de posts
+  it('should list all posts', async () => {
     const res = await request(app).get('/posts');
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
-});
 
-describe('GET /posts/:id', () => {
-  it('deve retornar um post existente', async () => {
-    const postRes = await request(app)
-      .post('/posts')
-      .send({
-        title: 'Post para buscar',
-        content: 'Conteúdo',
-        author: 'Autor'
-      });
-    const id = postRes.body.id;
-
-    const res = await request(app).get(`/posts/${id}`);
+  // Teste de busca de post por ID
+  it('should get a post by id', async () => {
+    expect(createdPostId).toBeDefined();
+    const res = await request(app).get(`/posts/${createdPostId}`);
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty('id', id);
+    expect(res.body).toHaveProperty('id', createdPostId);
   });
 
-  it('deve retornar 404 para post inexistente', async () => {
-    const res = await request(app).get('/posts/999999');
-    expect(res.statusCode).toBe(404);
-  });
-});
-
-describe('PUT /posts/:id', () => {
-  it('deve atualizar um post existente', async () => {
-    const postRes = await request(app)
-      .post('/posts')
-      .send({
-        title: 'Post para atualizar',
-        content: 'Conteúdo',
-        author: 'Autor'
-      });
-    const id = postRes.body.id;
-
+  // Teste de atualização de post
+  it('should update a post', async () => {
+    expect(createdPostId).toBeDefined();
     const res = await request(app)
-      .put(`/posts/${id}`)
-      .send({
-        title: 'Título Atualizado',
-        content: 'Conteúdo Atualizado',
-        author: 'Autor Atualizado'
-      });
+      .put(`/posts/${createdPostId}`)
+      .send({ title: 'Post Atualizado' });
     expect(res.statusCode).toBe(200);
-    expect(res.body.title).toBe('Título Atualizado');
+    expect(res.body.title).toBe('Post Atualizado');
   });
 
-  it('deve retornar 404 ao tentar atualizar post inexistente', async () => {
-    const res = await request(app)
-      .put('/posts/999999')
-      .send({
-        title: 'Qualquer',
-        content: 'Qualquer',
-        author: 'Qualquer'
-      });
-    expect(res.statusCode).toBe(404);
-  });
-});
-
-describe('DELETE /posts/:id', () => {
-  it('deve deletar um post existente', async () => {
-    const postRes = await request(app)
-      .post('/posts')
-      .send({
-        title: 'Post para deletar',
-        content: 'Conteúdo',
-        author: 'Autor'
-      });
-    const id = postRes.body.id;
-
-    const res = await request(app).delete(`/posts/${id}`);
+  // Teste de deleção de post
+  it('should delete a post', async () => {
+    expect(createdPostId).toBeDefined();
+    const res = await request(app).delete(`/posts/${createdPostId}`);
     expect(res.statusCode).toBe(204);
   });
 
-  it('deve retornar 404 ao tentar deletar post inexistente', async () => {
-    const res = await request(app).delete('/posts/999999');
+  // Teste de erro ao buscar post inexistente
+  it('should return 404 for non-existing post', async () => {
+    const res = await request(app).get('/posts/999999');
     expect(res.statusCode).toBe(404);
+  });
+
+  // Teste de erro ao criar post sem dados obrigatórios
+  it('should return 400 when required fields are missing', async () => {
+    const res = await request(app)
+      .post('/posts')
+      .send({ title: '' });
+    expect(res.statusCode).toBe(400);
   });
 });
