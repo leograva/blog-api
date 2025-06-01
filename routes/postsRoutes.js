@@ -1,5 +1,11 @@
 const express = require('express');
 const router = express.Router();
+/**
+ * Controlador responsável por gerenciar as operações relacionadas aos posts.
+ * Importa as funções de manipulação de posts do diretório controllers.
+ * 
+ * @module postsController
+ */
 const postsController = require('../controllers/postsController');
 
 /**

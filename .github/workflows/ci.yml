@@ -1,23 +1,23 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline # Nome do workflow
 
 on:
   push:
-    branches: [main]
+    branches: [main] # Executa em push na branch main
   pull_request:
-    branches: [main]
+    branches: [main] # Executa em pull request na branch main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Usa máquina virtual Ubuntu mais recente
 
     services:
-      postgres:
-        image: postgres:14
+      postgres: # Serviço de banco de dados PostgreSQL
+        image: postgres:14 # Imagem Docker do PostgreSQL versão 14
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: blog
-        ports: ['5432:5432']
+          POSTGRES_USER: postgres # Usuário do banco
+          POSTGRES_PASSWORD: postgres # Senha do banco
+          POSTGRES_DB: blog # Nome do banco
+        ports: ['5432:5432'] # Mapeia porta do banco
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -25,37 +25,39 @@ jobs:
           --health-retries 5
 
     env:
-      DB_USER: postgres
-      DB_HOST: localhost
-      DB_DATABASE: blog
-      DB_PASSWORD: postgres
-      DB_PORT: 5432
+      DB_USER: postgres # Variável de ambiente: usuário do banco
+      DB_HOST: localhost # Host do banco
+      DB_DATABASE: blog # Nome do banco
+      DB_PASSWORD: postgres # Senha do banco
+      DB_PORT: 5432 # Porta do banco
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3 # Faz checkout do código fonte
 
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v3 # Instala Node.js
       with:
-        node-version: '18'
+        node-version: '18' # Versão do Node.js
 
-    - name: Install dependencies
-      run: npm install
+    - name: Instalação de dependências
+      run: npm install # Instala dependências do projeto
 
-    - name: Wait for PostgreSQL
+    - name: Aguardando o banco PostgreSQL
+      # Aguarda o banco PostgreSQL estar pronto antes de executar os testes
       run: |
         until pg_isready -h localhost -U postgres; do
           echo "Waiting for postgres..."
           sleep 2
-        done
+        done # Aguarda o banco PostgreSQL estar pronto
 
-    - name: Run migration (create table)
-      run: psql -h localhost -U postgres -d blog -f ./initdb/init.sql
+    - name: Execução das migrations
+      # Executa script de migração para criar tabelas
+      run: psql -h localhost -U postgres -d blog -f ./initdb/init.sql 
       env:
-        PGPASSWORD: postgres
+        PGPASSWORD: postgres # Senha do usuário do banco
 
-    - name: Run tests
-      run: npm test
+    - name: Execução de testes automatizados
+      run: npm test # Executa os testes automatizados
 
-    - name: Generate code coverage report
-      run: npm run coverage
+    - name: Geração do relatório de cobertura de testes
+      run: npm run coverage # Gera relatório de cobertura de código
