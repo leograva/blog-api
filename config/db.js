@@ -1,5 +1,6 @@
 // Importa o Pool do pacote 'pg' para gerenciar conexões com o PostgreSQL
 const { Pool } = require('pg');
+
 // Carrega variáveis de ambiente do arquivo .env
 require('dotenv').config();
 

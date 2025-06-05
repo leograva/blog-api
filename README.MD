@@ -19,7 +19,7 @@ API RESTful para gerenciar postagens de blog com Node.js, PostgreSQL, Swagger e 
 ## 📦 Setup
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repo.git
+git clone https://github.com/leograva/blog-api.git
 cd blog-api
 cp .env.example .env
 docker-compose up --build
