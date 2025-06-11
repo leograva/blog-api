@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const postsRoutes = require('./routes/postsRoutes');
 const { swaggerUi, specs } = require('./swagger/swagger');
 
@@ -7,7 +8,8 @@ const app = express();
 
 const PORT = 3000;
 
-
+// Libera acesso de todas as origens
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/posts', postsRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
