@@ -12,3 +12,6 @@ config.ini
 
 # Arquivos temporários
 *.tmp
+
+# Arquivos de ambiente
+.env
