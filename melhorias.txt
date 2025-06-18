@@ -1,0 +1,8 @@
+Agora para melhorar ela falta boas práticas de engenharia de software. Alguns exemplos:
+- Inclusão de .gitignore - OK
+- packege json  startando com nodemon (parece aplicação teste e não produção) - OK
+- Minificação do código para deploy
+- Falta middlewares
+- Tem oportunidade de inclusão de alguns design patterns
+- Utilizacao de secrets no github actions
+- Utilizacao de enviroments em toda aplicação
