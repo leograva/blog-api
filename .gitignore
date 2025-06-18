@@ -1,0 +1,14 @@
+# Pasta de configuração específica do IDE
+.vscode/
+
+# Arquivos de log
+*.log
+
+# Pasta de módulos do Node.js
+node_modules/
+
+# Arquivos de configuração
+config.ini
+
+# Arquivos temporários
+*.tmp
