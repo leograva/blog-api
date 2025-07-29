@@ -8,9 +8,9 @@ services:
       - "3000:3000"
     environment:
       - DB_HOST=db
-      - DB_DATABASE=${{ secrets.DB_DATABASE }}
-      - DB_USER=${{ secrets.DB_USER }}
-      - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+      - DB_DATABASE=blog
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
       - DB_PORT=5432
     depends_on:
       - db
@@ -19,8 +19,8 @@ services:
     image: postgres:14
     container_name: blog-db
     environment:
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: blog
     ports:
       - "5432:5432"
