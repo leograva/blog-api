@@ -14,7 +14,7 @@ API RESTful para gerenciar postagens de blog com Node.js, PostgreSQL, Swagger e 
 - Jest (testes)
 - GitHub Actions (CI/CD)
 
----
+----
 
 ## 📦 Setup
 
