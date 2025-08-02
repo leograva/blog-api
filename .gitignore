@@ -1,17 +1,39 @@
-# Pasta de configuração específica do IDE
+# IDEs e editores
 .vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
 
-# Arquivos de log
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Pasta de módulos do Node.js
+# Dependências
 node_modules/
 
-# Arquivos de configuração
+# Configurações e ambientes
+.env
+.env.*.local
 config.ini
 
 # Arquivos temporários
 *.tmp
+*.temp
+*.swp
+*.swo
 
-# Arquivos de ambiente
-.env
+# Build e distribuição
+dist/
+build/
+coverage/
+tmp/
+out/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Outros
+*.local
