@@ -32,9 +32,10 @@ jobs:
       DB_PORT: 5432 # Porta do banco
 
     steps:
-    - uses: actions/checkout@v4 # Faz checkout do código fonte
+    - name: Checkout do código
+      uses: actions/checkout@v4 # Faz checkout do código fonte
 
-    - name: Set up Node.js
+    - name: Instalação do Node.js
       uses: actions/setup-node@v3 # Instala Node.js
       with:
         node-version: '18' # Versão do Node.js
@@ -42,7 +43,7 @@ jobs:
     - name: Instalação de dependências
       run: npm install # Instala dependências do projeto
 
-    - name: Aguardando o banco PostgreSQL
+    - name: Aguardando o banco PostgreSQL subir
       # Aguarda o banco PostgreSQL estar pronto antes de executar os testes
       run: |
         until pg_isready -h localhost -U postgres; do
@@ -50,7 +51,7 @@ jobs:
           sleep 2
         done # Aguarda o banco PostgreSQL estar pronto
 
-    - name: Execução das migrations
+    - name: Execução das migrations - initdb/init.sql
       # Executa script de migração para criar tabelas
       run: psql -h localhost -U postgres -d blog -f ./initdb/init.sql 
       env:
@@ -65,12 +66,12 @@ jobs:
     - name: Geração do relatório de cobertura de testes
       run: npm run coverage # Gera relatório de cobertura de código
       
-    - name: Set up SSH
+    - name: Estabelecendo conexão SSH
       uses: webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-    - name: SSH into VPS and deploy
+    - name: Entrando no VPS e fazendo deploy
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
           cd /home/ubuntu/devtools/blog-api &&
