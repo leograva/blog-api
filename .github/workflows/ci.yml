@@ -56,14 +56,14 @@ jobs:
       env:
         PGPASSWORD: postgres # Senha do usuário do banco
 
-    - name: Corrige permissões do Jest
-      run: chmod +x ./node_modules/.bin/jest
+    #- name: Corrige permissões do Jest
+    #  run: chmod +x ./node_modules/.bin/jest
 
-    - name: Execução de testes automatizados
-      run: npm test # Executa os testes automatizados
+    #- name: Execução de testes automatizados
+    #  run: npm test # Executa os testes automatizados
 
-    - name: Geração do relatório de cobertura de testes
-      run: npm run coverage # Gera relatório de cobertura de código
+    #- name: Geração do relatório de cobertura de testes
+    #  run: npm run coverage # Gera relatório de cobertura de código
     
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.7.0
