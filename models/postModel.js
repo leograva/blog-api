@@ -7,8 +7,15 @@ const pool = require('../config/db');
  * Retorna um array com todos os registros encontrados.
  */
 const getAllPosts = async () => {
-  const result = await pool.query('SELECT * FROM posts');
-  return result.rows;
+  try {
+    console.log('MODEL: Executando query getAllPosts');
+    const result = await pool.query('SELECT * FROM posts ORDER BY created_at DESC');
+    console.log('MODEL: Query getAllPosts executada com sucesso, encontrados:', result.rows.length, 'posts');
+    return result.rows;
+  } catch (error) {
+    console.error('MODEL: Erro em getAllPosts:', error);
+    throw error;
+  }
 };
 
 /**
@@ -18,8 +25,15 @@ const getAllPosts = async () => {
  * Retorna o objeto do post encontrado ou undefined se não existir.
  */
 const getPostById = async (id) => {
-  const result = await pool.query('SELECT * FROM posts WHERE id = $1', [id]);
-  return result.rows[0];
+  try {
+    console.log('MODEL: Executando query getPostById para ID:', id);
+    const result = await pool.query('SELECT * FROM posts WHERE id = $1', [id]);
+    console.log('MODEL: Query getPostById executada, encontrado:', result.rows.length > 0 ? 'sim' : 'não');
+    return result.rows[0];
+  } catch (error) {
+    console.error('MODEL: Erro em getPostById:', error);
+    throw error;
+  }
 };
 
 /**

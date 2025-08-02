@@ -182,3 +182,30 @@ exports.searchPosts = asyncHandler(async (req, res) => {
     }
   });
 });
+  try {
+    // Deleta a postagem
+    const deletedPost = await postModel.deletePost(id);
+    if (deletedPost) {
+      res.json({ message: 'Postagem deletada com sucesso' }); // Mensagem de sucesso
+    } else {
+      res.status(404).json({ error: 'Postagem não encontrada' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao deletar postagem' });
+  }
+};
+
+// Controlador para buscar postagens por termo de pesquisa
+exports.searchPosts = async (req, res) => {
+  const { q } = req.query; // Obtém o termo de busca dos parâmetros de query
+  if (!q) {
+    return res.status(400).json({ error: 'Parâmetro "q" é obrigatório para busca' });
+  }
+  try {
+    // Busca postagens que correspondam ao termo
+    const posts = await postModel.searchPosts(q);
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao buscar postagens' });
+  }
+};
