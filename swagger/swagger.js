@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://blog-api.leonardograva.com.br:3000/',
       },
     ],
   },
