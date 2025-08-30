@@ -80,6 +80,6 @@ jobs:
           else
             git pull origin main;
           fi
-          docker-compose pull
-          docker-compose up -d --build
+          docker compose pull
+          docker compose up -d --build
         EOF
