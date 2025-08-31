@@ -51,12 +51,6 @@ jobs:
           sleep 2
         done # Aguarda o banco PostgreSQL estar pronto
 
-    - name: Execução das migrations - initdb/init.sql
-      # Executa script de migração para criar tabelas
-      run: psql -h localhost -U postgres -d blog -f ./initdb/init.sql 
-      env:
-        PGPASSWORD: postgres # Senha do usuário do banco
-
     - name: Corrige permissões do Jest
       run: chmod +x ./node_modules/.bin/jest
 
