@@ -13,14 +13,20 @@ CREATE TABLE IF NOT EXISTS posts (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   content TEXT NOT NULL,
+  author VARCHAR(255), -- Adiciona a coluna author
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+`;
+
+const addAuthorColumn = `
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS author VARCHAR(255);
 `;
 
 async function migrate() {
   try {
     await client.connect();
     await client.query(createPostsTable);
+    await client.query(addAuthorColumn); // Garante que a coluna exista
     console.log('Migration ran successfully!');
   } catch (err) {
     console.error('Migration failed:', err);
