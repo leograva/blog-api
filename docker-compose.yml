@@ -5,22 +5,23 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: db
-      DB_DATABASE: blog
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_PORT: 5432
+      - DB_HOST=db
+      - DB_DATABASE=blog
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_PORT=5432
     depends_on:
       db:
         condition: service_healthy
+    command: sh -c "npm run migrate && npm start"
 
   db:
     image: postgres:16
     container_name: blog-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: blog
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=blog
     ports:
       - "5432:5432"
     volumes:
