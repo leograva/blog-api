@@ -14,40 +14,46 @@ jobs:
     - name: Checkout do código
       uses: actions/checkout@v4
 
-    - name: Instalar Docker Compose (compatibilidade)
+    - name: Instalar Docker Compose
       run: |
-        sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
+        docker compose version || (
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+        )
 
     - name: Subir DB
-      run: docker-compose up -d db
+      run: docker compose up -d db
 
-    - name: Esperar DB estar disponível (PostgreSQL)
+    - name: Esperar PostgreSQL aceitar conexões
       run: |
         echo "Aguardando PostgreSQL aceitar conexões..."
-        until docker-compose exec -T db pg_isready -U postgres; do
+        until docker compose exec -T db pg_isready -U postgres; do
           sleep 2
         done
 
-    - name: Rodar migrations
-      run: docker-compose run --rm api npm run migrate
+    - name: Subir API (modo background)
+      run: docker compose up -d api
 
-    - name: Rodar testes
-      run: docker-compose run --rm api npm test
+    - name: Rodar migrations via container já iniciado
+      run: docker compose exec api npx sequelize-cli db:migrate
 
-    - name: Gerar cobertura
-      run: docker-compose run --rm api npm run coverage
+    - name: Executar testes
+      run: docker compose exec api npm test
 
-    - name: Estabelecendo conexão SSH
+    - name: Gerar cobertura de testes
+      run: docker compose exec api npm run coverage
+
+    - name: Estabelecer conexão SSH com VPS
       uses: webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-    - name: Deploy na VPS via SSH
+    - name: Deploy remoto via SSH na VPS
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-          cd /home/ubuntu/devtools/blog-api || exit 1
+          set -e
+          cd /home/ubuntu/devtools/blog-api
           git pull origin main
-          docker-compose pull
-          docker-compose up -d --build
+          docker compose pull
+          docker compose up -d --build
         EOF
