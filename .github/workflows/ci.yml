@@ -54,6 +54,9 @@ jobs:
     - name: Corrige permissões do Jest
       run: chmod +x ./node_modules/.bin/jest
 
+    - name: Run migrations
+      run: npx sequelize-cli db:migrate
+
     - name: Execução de testes automatizados
       run: npm test # Executa os testes automatizados
 
@@ -75,5 +78,6 @@ jobs:
             git pull origin main;
           fi
           docker compose pull
-          docker compose up -d --build
+          docker compose up -d --build- name: Run migrations
+  run: npx sequelize-cli db:migrate
         EOF
