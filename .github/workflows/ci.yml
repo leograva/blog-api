@@ -24,18 +24,18 @@ jobs:
     - name: Subir DB
       run: docker compose up -d db
 
-    - name: Esperar PostgreSQL aceitar conexões
+    - name: Esperar DB estar disponível (PostgreSQL)
       run: |
         echo "Aguardando PostgreSQL aceitar conexões..."
-        until docker compose exec -T db pg_isready -U postgres; do
+        until docker compose exec db pg_isready -U postgres; do
           sleep 2
         done
 
     - name: Subir API (modo background)
       run: docker compose up -d api
 
-    - name: Rodar migrations via container já iniciado
-      run: docker compose exec api npx sequelize-cli db:migrate
+    - name: Rodar migrations com segurança
+      run: docker compose run --rm api npx sequelize-cli db:migrate
 
     - name: Executar testes
       run: docker compose exec api npm test
