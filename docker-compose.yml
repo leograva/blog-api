@@ -14,6 +14,7 @@ services:
       - DB_PORT=5432
     depends_on:
       - db
+    command: sh -c "npx sequelize-cli db:migrate && npm start"
 
   db:
     image: postgres:16
