@@ -7,25 +7,32 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DB_HOST=db
-      - DB_DATABASE=blog
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_PORT=5432
+      DB_HOST: db
+      DB_DATABASE: blog
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
     depends_on:
-      - db
-    command: sh -c "npx sequelize-cli db:migrate && npm start"
+      db:
+        condition: service_healthy
+    command: npm start
 
   db:
     image: postgres:16
     container_name: blog-db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=blog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blog
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   db_data:
