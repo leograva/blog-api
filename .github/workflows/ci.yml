@@ -7,49 +7,47 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout do código
       uses: actions/checkout@v4
 
-    - name: Instalar Docker Compose CLI (se necessário)
+    - name: Instalar Docker Compose (compatibilidade)
       run: |
-        docker compose version || (sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose)
+        sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
 
-    - name: Construir containers e iniciar banco
-      run: docker compose up -d db
+    - name: Subir DB
+      run: docker-compose up -d db
 
-    - name: Aguardar banco PostgreSQL ficar disponível
+    - name: Esperar DB estar disponível (PostgreSQL)
       run: |
-        until docker exec blog-db pg_isready -U postgres; do
-          echo "Waiting for PostgreSQL to be ready..."
+        echo "Aguardando PostgreSQL aceitar conexões..."
+        until docker-compose exec -T db pg_isready -U postgres; do
           sleep 2
         done
 
-    - name: Rodar migrations no container API
-      run: docker compose run --rm api npx sequelize-cli db:migrate
+    - name: Rodar migrations
+      run: docker-compose run --rm api npm run migrate
 
-    - name: Subir container API
-      run: docker compose up -d api
+    - name: Rodar testes
+      run: docker-compose run --rm api npm test
 
-    - name: Executar testes no container API
-      run: docker compose run --rm api npm test
+    - name: Gerar cobertura
+      run: docker-compose run --rm api npm run coverage
 
-    - name: Gerar relatório de cobertura
-      run: docker compose run --rm api npm run coverage
-
-    - name: Estabelecendo conexão SSH para deploy
+    - name: Estabelecendo conexão SSH
       uses: webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-    - name: Deploy no VPS via SSH
+    - name: Deploy na VPS via SSH
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
           cd /home/ubuntu/devtools/blog-api || exit 1
           git pull origin main
-          docker compose pull
-          docker compose up -d --build
+          docker-compose pull
+          docker-compose up -d --build
         EOF

@@ -15,7 +15,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: npm start
 
   db:
     image: postgres:16
