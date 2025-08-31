@@ -13,7 +13,7 @@ RUN npm install
 # Copia o restante da aplicação
 COPY . .
 
-# Expõe a porta que a API usa
+# Expõe a porta que a API usa.
 EXPOSE 3000
 
 # Comando para iniciar a aplicação
