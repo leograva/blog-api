@@ -4,8 +4,6 @@ services:
     container_name: blog-api
     ports:
       - "3000:3000"
-    volumes:
-      - .:/usr/src/app
     environment:
       DB_HOST: db
       DB_DATABASE: blog

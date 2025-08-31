@@ -34,8 +34,8 @@ jobs:
     - name: Subir API (modo background)
       run: docker compose up -d api
 
-    - name: Rodar migrations com segurança
-      run: docker compose run --rm api npx sequelize-cli db:migrate
+    - name: Rodar migrations
+      run: docker compose run --rm api npm run migrate
 
     - name: Executar testes
       run: docker compose exec api npm test

@@ -7,8 +7,12 @@ WORKDIR /usr/src/app
 # Copia os arquivos de dependências
 COPY package*.json ./
 
-# Instala as dependências do projeto
-RUN npm install --legacy-peer-deps
+# Garante que o NODE_ENV não esteja como "production"
+ARG NODE_ENV=development
+ENV NODE_ENV=$NODE_ENV
+
+# Instala todas as dependências (inclusive devDependencies)
+RUN npm install
 
 # Copia o restante da aplicação
 COPY . .
