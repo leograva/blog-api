@@ -20,5 +20,4 @@ COPY . .
 # Expõe a porta que a API usa
 EXPOSE 3000
 
-# Comando padrão para iniciar a aplicação
-CMD ["npm", "start"]
+# O comando de inicialização será definido pelo docker-compose.yml

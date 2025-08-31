@@ -31,11 +31,11 @@ jobs:
           sleep 2
         done
 
-    - name: Subir API (modo background)
-      run: docker compose up -d api
-
     - name: Rodar migrations
       run: docker compose run --rm api npm run migrate
+
+    - name: Subir API (modo background)
+      run: docker compose up -d api
 
     - name: Estabelecer conexão SSH com VPS
       uses: webfactory/ssh-agent@v0.7.0
