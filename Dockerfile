@@ -1,23 +1,20 @@
-# Usa a imagem oficial do Node.js
-FROM node:22
+# Use an official Node.js runtime as a parent image
+FROM node:18
 
-# Define o diretório de trabalho dentro do container
+# Set the working directory
 WORKDIR /usr/src/app
 
-# Copia os arquivos de dependências
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Garante que o NODE_ENV não esteja como "production"
-ARG NODE_ENV=development
-ENV NODE_ENV=$NODE_ENV
-
-# Instala todas as dependências (inclusive devDependencies)
+# Install dependencies
 RUN npm install
 
-# Copia o restante da aplicação
+# Copy the rest of the application code
 COPY . .
 
-# Expõe a porta que a API usa
+# Expose the port the app runs on
 EXPOSE 3000
 
-# O comando de inicialização será definido pelo docker-compose.yml
+# Start the application
+CMD ["npm", "start"]
