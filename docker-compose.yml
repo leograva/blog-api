@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: localhost # coloque aqui o IP ou hostname da VPS
+      DB_HOST: 127.0.0.1 # coloque aqui o IP ou hostname da VPS
       DB_DATABASE: blog
       DB_USER: postgres
       DB_PASSWORD: postgres
