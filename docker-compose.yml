@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   api:
     build: .
@@ -5,36 +7,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DB_HOST=localhost
-      - DB_DATABASE=blog
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_PORT=5432
-    depends_on:
-<<<<<<< HEAD
-      - db
-=======
-      db:
-        condition: service_healthy
-    command: sh -c "npm run migrate && npm start"
-
-  db:
-    image: postgres:16
-    container_name: blog-db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=blog
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
->>>>>>> c695e1f6a88960b9595415755a718b0642f05d42
-volumes:
-  db_data:
+      DB_HOST: localhost # coloque aqui o IP ou hostname da VPS
+      DB_DATABASE: blog
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
