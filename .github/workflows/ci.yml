@@ -37,6 +37,9 @@ jobs:
             echo '[INFO] Verificando package.json'
             ls -l package.json
 
+            echo '[INFO] Removendo containers e volumes antigos'
+            docker compose down -v
+
             echo '[INFO] Atualizando imagens Docker'
             docker compose pull
 
