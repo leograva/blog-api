@@ -10,6 +10,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
       - name: Estabelecer conexão SSH com VPS
         uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -27,6 +30,7 @@ jobs:
             ls -l package.json
 
             echo '[INFO] Fazendo pull da branch main'
+            git checkout main
             git pull origin main
 
             echo '[INFO] Atualizando imagens Docker'
