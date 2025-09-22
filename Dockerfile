@@ -13,6 +13,12 @@ RUN npm install
 # Copia o restante do código
 COPY . .
 
+# Copia scripts de inicialização
+COPY ./initdb/init.sql /initdb/init.sql
+COPY ./initdb/run-init.sh /initdb/run-init.sh
+# Torna o script executável
+RUN chmod +x /initdb/run-init.sh
+
 # Expõe a porta 3000
 EXPOSE 3000
 
