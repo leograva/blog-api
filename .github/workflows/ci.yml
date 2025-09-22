@@ -34,6 +34,10 @@ jobs:
             fi
 
             cd /home/ubuntu/devtools/blog-api
+
+            echo '[INFO] Garantindo permissões de execução nos scripts initdb'
+            chmod +x ./initdb/*.sh || true
+
             echo '[INFO] Verificando package.json'
             ls -l package.json
 
