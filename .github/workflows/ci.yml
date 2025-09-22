@@ -23,15 +23,19 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
             set -e
 
-            echo '[INFO] Acessando diretório do projeto'
-            cd /home/ubuntu/devtools/blog-api
+            if [ ! -d /home/ubuntu/devtools/blog-api/.git ]; then
+              echo '[INFO] Clonando repositório'
+              git clone https://github.com/leograva/blog-api.git /home/ubuntu/devtools/blog-api
+            else
+              echo '[INFO] Repositório já existe, atualizando'
+              cd /home/ubuntu/devtools/blog-api
+              git fetch --all
+              git reset --hard origin/main
+            fi
 
+            cd /home/ubuntu/devtools/blog-api
             echo '[INFO] Verificando package.json'
             ls -l package.json
-
-            echo '[INFO] Fazendo pull da branch main'
-            git checkout main
-            git pull origin main
 
             echo '[INFO] Atualizando imagens Docker'
             docker compose pull
