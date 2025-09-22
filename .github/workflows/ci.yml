@@ -18,10 +18,18 @@ jobs:
 
     - name: Deploy remoto via SSH na VPS
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
           set -e
+
+          echo '[INFO] Acessando diretório do projeto'
           cd /home/ubuntu/devtools/blog-api
+
+          echo '[INFO] Fazendo pull da branch main'
           git pull origin main
+
+          echo '[INFO] Atualizando imagens Docker'
           docker compose pull
+
+          echo '[INFO] Recriando containers com build'
           docker compose up -d --build
-        EOF
+        "
