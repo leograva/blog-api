@@ -10,26 +10,28 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Estabelecer conexão SSH com VPS
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-    - name: Estabelecer conexão SSH com VPS
-      uses: webfactory/ssh-agent@v0.7.0
-      with:
-        ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+      - name: Deploy remoto via SSH na VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
+            set -e
 
-    - name: Deploy remoto via SSH na VPS
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
-          set -e
+            echo '[INFO] Acessando diretório do projeto'
+            cd /home/ubuntu/devtools/blog-api
 
-          echo '[INFO] Acessando diretório do projeto'
-          cd /home/ubuntu/devtools/blog-api
+            echo '[INFO] Verificando package.json'
+            ls -l package.json
 
-          echo '[INFO] Fazendo pull da branch main'
-          git pull origin main
+            echo '[INFO] Fazendo pull da branch main'
+            git pull origin main
 
-          echo '[INFO] Atualizando imagens Docker'
-          docker compose pull
+            echo '[INFO] Atualizando imagens Docker'
+            docker compose pull
 
-          echo '[INFO] Recriando containers com build'
-          docker compose up -d --build
-        "
+            echo '[INFO] Recriando containers com build'
+            docker compose up -d --build
+          "
