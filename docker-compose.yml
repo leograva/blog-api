@@ -14,6 +14,8 @@ services:
       - DB_PORT=5432
     depends_on:
       - db
+    networks:
+      - blog-net
 
   db:
     image: postgres:14
@@ -26,7 +28,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      - blog-net
+
+networks:
+  blog-net:
 
 volumes:
   pgdata:
