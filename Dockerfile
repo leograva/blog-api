@@ -1,20 +1,20 @@
-# Use an official Node.js runtime as a parent image
+# Usa imagem base do Node.js (bom!)
 FROM node:18
 
-# Set the working directory
+# Define diretório de trabalho (correto)
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# Copia arquivos de dependência (boa prática)
 COPY package*.json ./
 
-# Install dependencies
+# Instala dependências (ok, mas pode ser mais seguro)
 RUN npm install
 
-# Copy the rest of the application code
+# Copia o restante do código
 COPY . .
 
-# Expose the port the app runs on
+# Expõe a porta 3000
 EXPOSE 3000
 
-# Start the application
+# Comando para iniciar o app
 CMD ["npm", "start"]
