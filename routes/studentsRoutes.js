@@ -1,18 +1,24 @@
 const express = require('express');
 const router = express.Router();
+
 /**
- * Controlador responsável por gerenciar as operações relacionadas aos students.
- * Importa as funções de manipulação de students do diretório controllers.
- * 
- * @module studentsController
+ * Controlador responsável por gerenciar as operações relacionadas aos estudantes.
  */
 const studentsController = require('../controllers/studentsController');
+
+/**
+ * @swagger
+ * tags:
+ *   name: Students
+ *   description: Endpoints de gerenciamento de estudantes
+ */
 
 /**
  * @swagger
  * /students:
  *   get:
  *     summary: Lista todos os estudantes
+ *     tags: [Students]
  *     responses:
  *       200:
  *         description: Lista de estudantes
@@ -24,6 +30,7 @@ router.get('/', studentsController.getStudents);
  * /students/search:
  *   get:
  *     summary: Busca estudantes por palavra-chave
+ *     tags: [Students]
  *     parameters:
  *       - in: query
  *         name: q
@@ -42,6 +49,7 @@ router.get('/search', studentsController.searchStudents);
  * /students/{id}:
  *   get:
  *     summary: Retorna um estudante específico
+ *     tags: [Students]
  *     parameters:
  *       - in: path
  *         name: id
@@ -60,7 +68,8 @@ router.get('/:id', studentsController.getStudentById);
  * @swagger
  * /students:
  *   post:
- *     summary: Cria uma nova estudante
+ *     summary: Cria um novo estudante
+ *     tags: [Students]
  *     requestBody:
  *       required: true
  *       content:
@@ -68,27 +77,27 @@ router.get('/:id', studentsController.getStudentById);
  *           schema:
  *             type: object
  *             required:
- *               - title
- *               - content
- *               - author
+ *               - name
+ *               - email
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *               content:
+ *               email:
  *                 type: string
- *               author:
- *                 type: string
+ *               age:
+ *                 type: integer
  *     responses:
  *       201:
- *         description: Post criado com sucesso
+ *         description: Estudante criado com sucesso
  */
-router.post('/', studentsController.createPost);
+router.post('/', studentsController.createStudent);
 
 /**
  * @swagger
  * /students/{id}:
  *   put:
  *     summary: Atualiza um estudante existente
+ *     tags: [Students]
  *     parameters:
  *       - in: path
  *         name: id
@@ -102,16 +111,15 @@ router.post('/', studentsController.createPost);
  *           schema:
  *             type: object
  *             required:
- *               - title
- *               - content
- *               - author
+ *               - name
+ *               - email
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *               content:
+ *               email:
  *                 type: string
- *               author:
- *                 type: string
+ *               age:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Estudante atualizado com sucesso
@@ -123,6 +131,7 @@ router.put('/:id', studentsController.updateStudent);
  * /students/{id}:
  *   delete:
  *     summary: Deleta um estudante existente
+ *     tags: [Students]
  *     parameters:
  *       - in: path
  *         name: id

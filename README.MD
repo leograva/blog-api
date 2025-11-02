@@ -67,6 +67,8 @@ blog-api/
 │
 ├── routes/
 │   └── postsRoutes.js      # Rotas de postagens
+│   └── studentsRoutes.js   # Rotas de estudantes
+│   └── teachersRoutes.js   # Rotas de professores
 │
 ├── swagger/
 │   └── swagger.js          # Configuração Swagger

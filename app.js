@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const postsRoutes = require('./routes/postsRoutes');
+const studentsRoutes = require('./routes/studentsRoutes');
+const teachersRoutes = require('./routes/teachersRoutes');
 const { swaggerUi, specs } = require('./swagger/swagger');
 const { globalErrorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
@@ -29,6 +31,8 @@ app.use((err, req, res, next) => {
 
 // Rotas
 app.use('/posts', postsRoutes);
+app.use('/students', studentsRoutes);
+app.use('/teachers', teachersRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Middleware para rotas não encontradas (deve vir depois de todas as rotas)

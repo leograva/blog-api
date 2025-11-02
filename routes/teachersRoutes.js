@@ -1,21 +1,27 @@
 const express = require('express');
 const router = express.Router();
+
 /**
- * Controlador responsável por gerenciar as operações relacionadas aos teachers.
- * Importa as funções de manipulação de teachers do diretório controllers.
- * 
- * @module teachersController
+ * Controlador responsável por gerenciar as operações relacionadas aos professores.
  */
 const teachersController = require('../controllers/teachersController');
 
 /**
  * @swagger
+ * tags:
+ *   name: Teachers
+ *   description: Endpoints de gerenciamento de professores
+ */
+
+/**
+ * @swagger
  * /teachers:
  *   get:
- *     summary: Lista todos os Professors
+ *     summary: Lista todos os professores
+ *     tags: [Teachers]
  *     responses:
  *       200:
- *         description: Lista de Professors
+ *         description: Lista de professores
  */
 router.get('/', teachersController.getTeachers);
 
@@ -23,7 +29,8 @@ router.get('/', teachersController.getTeachers);
  * @swagger
  * /teachers/search:
  *   get:
- *     summary: Busca Professors por palavra-chave
+ *     summary: Busca professores por palavra-chave
+ *     tags: [Teachers]
  *     parameters:
  *       - in: query
  *         name: q
@@ -33,7 +40,7 @@ router.get('/', teachersController.getTeachers);
  *         description: Termo de busca
  *     responses:
  *       200:
- *         description: Lista de Professors encontrados
+ *         description: Lista de professores encontrados
  */
 router.get('/search', teachersController.searchTeachers);
 
@@ -41,7 +48,8 @@ router.get('/search', teachersController.searchTeachers);
  * @swagger
  * /teachers/{id}:
  *   get:
- *     summary: Retorna um Professor específico
+ *     summary: Retorna um professor específico
+ *     tags: [Teachers]
  *     parameters:
  *       - in: path
  *         name: id
@@ -60,7 +68,8 @@ router.get('/:id', teachersController.getTeacherById);
  * @swagger
  * /teachers:
  *   post:
- *     summary: Cria um novo Professor
+ *     summary: Cria um novo professor
+ *     tags: [Teachers]
  *     requestBody:
  *       required: true
  *       content:
@@ -68,15 +77,12 @@ router.get('/:id', teachersController.getTeacherById);
  *           schema:
  *             type: object
  *             required:
- *               - title
- *               - content
- *               - author
+ *               - name
+ *               - email
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *               content:
- *                 type: string
- *               author:
+ *               email:
  *                 type: string
  *     responses:
  *       201:
@@ -88,7 +94,8 @@ router.post('/', teachersController.createTeacher);
  * @swagger
  * /teachers/{id}:
  *   put:
- *     summary: Atualiza um Professor existente
+ *     summary: Atualiza um professor existente
+ *     tags: [Teachers]
  *     parameters:
  *       - in: path
  *         name: id
@@ -101,16 +108,10 @@ router.post('/', teachersController.createTeacher);
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - title
- *               - content
- *               - author
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *               content:
- *                 type: string
- *               author:
+ *               email:
  *                 type: string
  *     responses:
  *       200:
@@ -122,7 +123,8 @@ router.put('/:id', teachersController.updateTeacher);
  * @swagger
  * /teachers/{id}:
  *   delete:
- *     summary: Deleta um Professor existente
+ *     summary: Deleta um professor existente
+ *     tags: [Teachers]
  *     parameters:
  *       - in: path
  *         name: id

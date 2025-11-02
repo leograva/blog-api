@@ -1,184 +1,154 @@
-// Importa o modelo de postagens
-const postModel = require('../models/studentModel');
+// Importa o modelo de estudantes
+const studentModel = require('../models/studentModel');
 const { AppError, asyncHandler } = require('../middleware/errorHandler');
 
-// Controlador para listar todos os estudantes
+/**
+ * Controlador para listar todos os estudantes
+ */
 exports.getStudents = asyncHandler(async (req, res) => {
   console.log('Iniciando busca de estudantes...');
 
-  // Busca todos os estudantes no banco de dados
-  const students = await postModel.getAllStudents();
-  
-  console.log('estudantes encontrados:', students.length);
-  
+  const students = await studentModel.getAllStudents();
+
+  console.log('Estudantes encontrados:', students.length);
+
   res.status(200).json({
     status: 'success',
-    results: posts.length,
-    data: {
-      posts
-    }
+    results: students.length,
+    data: { students },
   });
 });
 
-// Controlador para buscar uma estudantes pelo ID
-exports.getStudentsById = asyncHandler(async (req, res) => {
+/**
+ * Controlador para buscar um estudante pelo ID
+ */
+exports.getStudentById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  
-  // Validação do ID
+
   if (!id || isNaN(id)) {
     throw new AppError('ID inválido. Deve ser um número', 400);
   }
-  
-  console.log('Buscando post com ID:', id);
-  
-  // Busca a postagem pelo ID
-  const post = await studentModel.getPostById(id);
-  
-  if (!post) {
-    throw new AppError('Post não encontrado', 404, { postId: id });
+
+  console.log('Buscando estudante com ID:', id);
+
+  const student = await studentModel.getStudentById(id);
+
+  if (!student) {
+    throw new AppError('Estudante não encontrado', 404, { studentId: id });
   }
-  
+
   res.status(200).json({
     status: 'success',
-    data: {
-      post
-    }
+    data: { student },
   });
 });
 
-// Controlador para criar uma nova postagem
+/**
+ * Controlador para criar um novo estudante
+ */
 exports.createStudent = asyncHandler(async (req, res) => {
-  const { title, content, author } = req.body;
-  
-  // Validação de campos obrigatórios
+  const { name, email } = req.body;
+
   const missingFields = [];
-  if (!title) missingFields.push('title');
-  if (!content) missingFields.push('content');
-  if (!author) missingFields.push('author');
-  
+  if (!name) missingFields.push('name');
+  if (!email) missingFields.push('email');
+
   if (missingFields.length > 0) {
-    throw new AppError(
-      'Campos obrigatórios não informados',
-      400,
-      { missingFields }
-    );
+    throw new AppError('Campos obrigatórios não informados', 400, { missingFields });
   }
-  
-  // Validações adicionais
-  if (title.length < 3) {
-    throw new AppError('Título deve ter pelo menos 3 caracteres', 400);
-  }
-  
-  if (content.length < 10) {
-    throw new AppError('Conteúdo deve ter pelo menos 10 caracteres', 400);
-  }
-  
-  console.log('Criando novo post:', { title, author });
-  
-  // Cria a nova postagem
-  const newPost = await postModel.createPost(title, content, author);
-  
+
+  console.log('Criando novo estudante:', { name, email });
+
+  const newStudent = await studentModel.createStudent(name, email);
+
   res.status(201).json({
     status: 'success',
-    message: 'Post criado com sucesso',
-    data: {
-      post: newPost
-    }
+    message: 'Estudante criado com sucesso',
+    data: { student: newStudent },
   });
 });
 
-// Controlador para atualizar uma postagem existente
+/**
+ * Controlador para atualizar um estudante existente
+ */
 exports.updateStudent = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, content, author } = req.body;
-  
-  // Validação do ID
+  const { name, email } = req.body;
+
   if (!id || isNaN(id)) {
     throw new AppError('ID inválido. Deve ser um número', 400);
   }
-  
-  // Validação de campos obrigatórios
+
   const missingFields = [];
-  if (!title) missingFields.push('title');
-  if (!content) missingFields.push('content');
-  if (!author) missingFields.push('author');
-  
+  if (!name) missingFields.push('name');
+  if (!email) missingFields.push('email');
+
   if (missingFields.length > 0) {
-    throw new AppError(
-      'Campos obrigatórios não informados',
-      400,
-      { missingFields }
-    );
+    throw new AppError('Campos obrigatórios não informados', 400, { missingFields });
   }
-  
-  console.log('Atualizando post ID:', id);
-  
-  // Atualiza a postagem
-  const updatedPost = await postModel.updatePost(id, title, content, author);
-  
-  if (!updatedPost) {
-    throw new AppError('Post não encontrado', 404, { postId: id });
+
+  console.log('Atualizando estudante ID:', id);
+
+  const updatedStudent = await studentModel.updateStudent(id, name, email);
+
+  if (!updatedStudent) {
+    throw new AppError('Estudante não encontrado', 404, { studentId: id });
   }
-  
+
   res.status(200).json({
     status: 'success',
-    message: 'Post atualizado com sucesso',
-    data: {
-      post: updatedPost
-    }
+    message: 'Estudante atualizado com sucesso',
+    data: { student: updatedStudent },
   });
 });
 
-// Controlador para deletar uma postagem
+/**
+ * Controlador para deletar um estudante
+ */
 exports.deleteStudent = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  
-  // Validação do ID
+
   if (!id || isNaN(id)) {
     throw new AppError('ID inválido. Deve ser um número', 400);
   }
-  
-  console.log('Deletando post ID:', id);
-  
-  // Deleta a postagem
-  const deletedPost = await postModel.deletePost(id);
-  
-  if (!deletedPost) {
-    throw new AppError('Post não encontrado', 404, { postId: id });
+
+  console.log('Deletando estudante ID:', id);
+
+  const deletedStudent = await studentModel.deleteStudent(id);
+
+  if (!deletedStudent) {
+    throw new AppError('Estudante não encontrado', 404, { studentId: id });
   }
-  
+
   res.status(200).json({
     status: 'success',
-    message: 'Post deletado com sucesso',
-    data: {
-      deletedPost: deletedPost
-    }
+    message: 'Estudante deletado com sucesso',
+    data: { student: deletedStudent },
   });
 });
 
-// Controlador para buscar postagens por termo de pesquisa
+/**
+ * Controlador para buscar estudantes por termo de pesquisa
+ */
 exports.searchStudents = asyncHandler(async (req, res) => {
   const { q } = req.query;
-  
+
   if (!q) {
     throw new AppError('Parâmetro "q" é obrigatório para busca', 400);
   }
-  
+
   if (q.length < 2) {
     throw new AppError('Termo de busca deve ter pelo menos 2 caracteres', 400);
   }
-  
-  console.log('Buscando posts com termo:', q);
-  
-  // Busca postagens que correspondam ao termo
+
+  console.log('Buscando estudantes com termo:', q);
+
   const students = await studentModel.searchStudents(q);
-  
+
   res.status(200).json({
     status: 'success',
     results: students.length,
     searchTerm: q,
-    data: {
-      students
-    }
+    data: { students },
   });
 });
